@@ -681,18 +681,28 @@ export class NlpToolsComponent {
       
       console.log('词形分析...');
       // 词形还原
-      const lemmas: string[] = (doc.terms().json() || []).map((term: any) => term.lemma || term.text || '');
+      const terms = doc.terms().json() || [];
+      const lemmas: string[] = terms.map((term: any) => {
+        if (!term) return '';
+        return term.lemma || term.text || '';
+      }).filter((lemma: string) => lemma !== '');
       console.log('词形还原结果:', lemmas);
       
       // 词干提取
-      const stems: string[] = (doc.terms().json() || []).map((term: any) => term.root || term.text || '');
+      const stems: string[] = terms.map((term: any) => {
+        if (!term) return '';
+        return term.root || term.text || '';
+      }).filter((stem: string) => stem !== '');
       console.log('词干提取结果:', stems);
       
       // 词性标注
-      const posTags: { word: string; tag: string }[] = (doc.terms().json() || []).map((term: any) => ({
-        word: term.text || '',
-        tag: term.tags[0] || 'unknown'
-      }));
+      const posTags: { word: string; tag: string }[] = terms.map((term: any) => {
+        if (!term) return { word: '', tag: 'unknown' };
+        return {
+          word: term.text || '',
+          tag: (term.tags && term.tags[0]) || 'unknown'
+        };
+      }).filter((tag: { word: string; tag: string }) => tag.word !== '');
       console.log('词性标注结果:', posTags);
 
       console.log('情感分析...');
