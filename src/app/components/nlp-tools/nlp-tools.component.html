@@ -13,9 +13,14 @@
       </div>
     </mat-card-header>
     <mat-card-content>
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>{{getTranslation('输入文本')}}</mat-label>
-        <textarea matInput [(ngModel)]="inputText" rows="5" [placeholder]="getTranslation('请输入要分析的文本...')"></textarea>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ getTranslation('输入文本') }}</mat-label>
+        <textarea matInput
+          [(ngModel)]="inputText"
+          [placeholder]="getTranslation('请输入要分析的文本')"
+          [title]="getTranslation('输入文本')"
+          [attr.aria-label]="getTranslation('输入文本')"
+          rows="5"></textarea>
       </mat-form-field>
 
       <button mat-raised-button color="primary" (click)="analyzeText()" [title]="getTranslation('分析文本')">{{getTranslation('分析文本')}}</button>
@@ -145,9 +150,14 @@
 
           <mat-tab [label]="getTranslation('文本相似度')">
             <div class="similarity-container">
-              <mat-form-field appearance="fill" class="full-width">
-                <mat-label>{{getTranslation('比较文本')}}</mat-label>
-                <textarea matInput [(ngModel)]="comparisonText" rows="3" [placeholder]="getTranslation('请输入要比较的文本...')"></textarea>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ getTranslation('比较文本') }}</mat-label>
+                <textarea matInput
+                  [(ngModel)]="comparisonText"
+                  [placeholder]="getTranslation('请输入要比较的文本')"
+                  [title]="getTranslation('比较文本')"
+                  [attr.aria-label]="getTranslation('比较文本')"
+                  rows="5"></textarea>
               </mat-form-field>
 
               <button mat-raised-button color="primary" (click)="compareTexts()" [title]="getTranslation('比较文本')">{{getTranslation('比较文本')}}</button>
@@ -185,7 +195,10 @@
               <div class="text-input-section">
                 <mat-form-field appearance="fill" class="full-width">
                   <mat-label>{{getTranslation('输入文本')}}</mat-label>
-                  <textarea matInput [(ngModel)]="inputText" rows="3" [placeholder]="getTranslation('请输入要分析的文本...')"></textarea>
+                  <textarea matInput [(ngModel)]="inputText" rows="3" 
+                    [placeholder]="getTranslation('请输入要分析的文本...')"
+                    [title]="getTranslation('输入文本')"
+                    [attr.aria-label]="getTranslation('输入文本')"></textarea>
                 </mat-form-field>
                 <button mat-raised-button color="primary" (click)="addText()" [title]="getTranslation('添加文本')">
                   {{getTranslation('添加文本')}}
@@ -271,6 +284,116 @@
                   {{format.content}}
                 </div>
               </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab [label]="getTranslation('高级分析')">
+            <div class="advanced-analysis">
+              <div *ngIf="!textAnalysis" class="no-analysis">
+                {{ getTranslation('请先分析文本') }}
+              </div>
+              
+              <ng-container *ngIf="textAnalysis">
+                <mat-card>
+                  <mat-card-header>
+                    <mat-card-title>{{ getTranslation('词形分析') }}</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('词形还原') }}</h3>
+                      <div class="chips-container">
+                        <mat-chip *ngFor="let lemma of textAnalysis.lemmas">{{ lemma }}</mat-chip>
+                      </div>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('词干提取') }}</h3>
+                      <div class="chips-container">
+                        <mat-chip *ngFor="let stem of textAnalysis.stems">{{ stem }}</mat-chip>
+                      </div>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('词性标注') }}</h3>
+                      <mat-list>
+                        <mat-list-item *ngFor="let tag of textAnalysis.posTags">
+                          {{ tag.word }} ({{ tag.tag }})
+                        </mat-list-item>
+                      </mat-list>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <mat-card>
+                  <mat-card-header>
+                    <mat-card-title>{{ getTranslation('情感分析增强') }}</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('情感强度') }}</h3>
+                      <mat-progress-bar [value]="textAnalysis.sentimentIntensity * 100"></mat-progress-bar>
+                      <span class="progress-value">{{ (textAnalysis.sentimentIntensity * 100).toFixed(1) }}%</span>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('积极词汇') }}</h3>
+                      <div class="chips-container">
+                        <mat-chip *ngFor="let word of textAnalysis.sentimentWords.positive">{{ word }}</mat-chip>
+                      </div>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('消极词汇') }}</h3>
+                      <div class="chips-container">
+                        <mat-chip *ngFor="let word of textAnalysis.sentimentWords.negative">{{ word }}</mat-chip>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <mat-card>
+                  <mat-card-header>
+                    <mat-card-title>{{ getTranslation('语言检测增强') }}</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('语言置信度') }}</h3>
+                      <mat-progress-bar [value]="textAnalysis.languageConfidence * 100"></mat-progress-bar>
+                      <span class="progress-value">{{ (textAnalysis.languageConfidence * 100).toFixed(1) }}%</span>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('语言变体') }}</h3>
+                      <div class="chips-container">
+                        <mat-chip *ngFor="let variant of textAnalysis.languageVariants">{{ variant }}</mat-chip>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+
+                <mat-card *ngIf="comparisonText">
+                  <mat-card-header>
+                    <mat-card-title>{{ getTranslation('相似度分析') }}</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('余弦相似度') }}</h3>
+                      <mat-progress-bar [value]="textAnalysis.similarityMetrics.cosine * 100"></mat-progress-bar>
+                      <span class="progress-value">{{ (textAnalysis.similarityMetrics.cosine * 100).toFixed(1) }}%</span>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('Jaccard相似度') }}</h3>
+                      <mat-progress-bar [value]="textAnalysis.similarityMetrics.jaccard * 100"></mat-progress-bar>
+                      <span class="progress-value">{{ (textAnalysis.similarityMetrics.jaccard * 100).toFixed(1) }}%</span>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('编辑距离相似度') }}</h3>
+                      <mat-progress-bar [value]="textAnalysis.similarityMetrics.levenshtein * 100"></mat-progress-bar>
+                      <span class="progress-value">{{ (textAnalysis.similarityMetrics.levenshtein * 100).toFixed(1) }}%</span>
+                    </div>
+                    <div class="analysis-section">
+                      <h3>{{ getTranslation('最长公共子序列相似度') }}</h3>
+                      <mat-progress-bar [value]="textAnalysis.similarityMetrics.lcs * 100"></mat-progress-bar>
+                      <span class="progress-value">{{ (textAnalysis.similarityMetrics.lcs * 100).toFixed(1) }}%</span>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </ng-container>
             </div>
           </mat-tab>
         </mat-tab-group>

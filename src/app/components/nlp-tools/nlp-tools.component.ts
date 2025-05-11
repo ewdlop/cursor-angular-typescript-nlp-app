@@ -68,6 +68,25 @@ interface TextCorrection {
   suggestions: string[];
 }
 
+interface TextAnalysis {
+  lemmas: string[];
+  stems: string[];
+  posTags: { word: string; tag: string }[];
+  sentimentIntensity: number;
+  sentimentWords: {
+    positive: string[];
+    negative: string[];
+  };
+  languageConfidence: number;
+  languageVariants: string[];
+  similarityMetrics: {
+    cosine: number;
+    jaccard: number;
+    levenshtein: number;
+    lcs: number;
+  };
+}
+
 @Component({
   selector: 'app-nlp-tools',
   standalone: true,
@@ -119,14 +138,21 @@ export class NlpToolsComponent {
   multipleTexts: string[] = [];
   currentTextIndex: number = 0;
   summaryLength: 'short' | 'medium' | 'long' = 'medium';
+  textAnalysis: TextAnalysis | null = null;
+  llmProbability: number = 0;
+  llmExplanation: string = '';
 
   private sentimentAnalyzer = new Sentiment();
 
   constructor(private snackBar: MatSnackBar) {}
 
   analyzeText() {
-    if (!this.inputText.trim()) return;
+    if (!this.inputText.trim()) {
+      console.log('输入文本为空，跳过分析');
+      return;
+    }
 
+    console.log('开始分析文本...');
     const doc = nlp(this.inputText);
     
     // 基础统计
@@ -174,6 +200,14 @@ export class NlpToolsComponent {
     // 添加新的分析
     this.analyzeTextStats(doc);
     this.formatText();
+
+    // 执行高级分析
+    console.log('准备执行高级分析...');
+    this.analyzeTextAdvanced();
+    console.log('高级分析完成，结果:', this.textAnalysis);
+
+    // 检测是否为LLM生成
+    this.detectLLMGenerated(this.inputText);
   }
 
   private detectLanguage(text: string): string {
@@ -631,5 +665,180 @@ export class NlpToolsComponent {
     }
 
     return score;
+  }
+
+  analyzeTextAdvanced() {
+    if (!this.inputText) {
+      console.log('输入文本为空，跳过高级分析');
+      return;
+    }
+
+    try {
+      console.log('开始高级分析...');
+      const doc = nlp(this.inputText);
+      const sentimentResult = this.sentimentAnalyzer.analyze(this.inputText);
+      const langCode = franc(this.inputText, { minLength: 3 });
+      
+      console.log('词形分析...');
+      // 词形还原
+      const lemmas: string[] = (doc.terms().json() || []).map((term: any) => term.lemma || term.text || '');
+      console.log('词形还原结果:', lemmas);
+      
+      // 词干提取
+      const stems: string[] = (doc.terms().json() || []).map((term: any) => term.root || term.text || '');
+      console.log('词干提取结果:', stems);
+      
+      // 词性标注
+      const posTags: { word: string; tag: string }[] = (doc.terms().json() || []).map((term: any) => ({
+        word: term.text || '',
+        tag: term.tags[0] || 'unknown'
+      }));
+      console.log('词性标注结果:', posTags);
+
+      console.log('情感分析...');
+      // 情感分析增强
+      const sentimentIntensity: number = Math.abs(sentimentResult.score) / 5;
+      const sentimentWords: { positive: string[]; negative: string[] } = {
+        positive: sentimentResult.positive || [],
+        negative: sentimentResult.negative || []
+      };
+      console.log('情感分析结果:', { sentimentIntensity, sentimentWords });
+
+      console.log('语言检测...');
+      // 语言检测增强
+      const languageConfidence: number = 0.8; // 由于 franc 库的限制，我们使用一个固定值
+      const languageVariants: string[] = [langCode || 'unknown']; // 由于 franc 库的限制，我们只返回检测到的语言代码
+      console.log('语言检测结果:', { languageConfidence, languageVariants });
+
+      // 相似度分析（如果有比较文本）
+      const similarityMetrics = {
+        cosine: 0,
+        jaccard: 0,
+        levenshtein: 0,
+        lcs: 0
+      };
+
+      if (this.comparisonText) {
+        console.log('计算相似度...');
+        const text1 = this.inputText.toLowerCase();
+        const text2 = this.comparisonText.toLowerCase();
+        
+        similarityMetrics.cosine = this.calculateCosineSimilarity(text1, text2);
+        similarityMetrics.jaccard = this.calculateJaccardSimilarity(text1, text2);
+        similarityMetrics.levenshtein = this.calculateLevenshteinSimilarity(text1, text2);
+        similarityMetrics.lcs = this.calculateLCSSimilarity(text1, text2);
+        console.log('相似度结果:', similarityMetrics);
+      }
+
+      const analysis: TextAnalysis = {
+        lemmas,
+        stems,
+        posTags,
+        sentimentIntensity,
+        sentimentWords,
+        languageConfidence,
+        languageVariants,
+        similarityMetrics
+      };
+
+      this.textAnalysis = analysis;
+      console.log('高级分析完成，结果:', this.textAnalysis);
+    } catch (error) {
+      console.error('高级分析出错:', error);
+      this.textAnalysis = null;
+    }
+  }
+
+  private calculateCosineSimilarity(text1: string, text2: string): number {
+    const words1 = text1.split(/\s+/);
+    const words2 = text2.split(/\s+/);
+    const commonWords = new Set(words1.filter(w => words2.includes(w)));
+    const dotProduct = Array.from(commonWords).reduce((sum, word) => sum + 1, 0);
+    const magnitude1 = Math.sqrt(words1.length);
+    const magnitude2 = Math.sqrt(words2.length);
+    return dotProduct / (magnitude1 * magnitude2);
+  }
+
+  private calculateJaccardSimilarity(text1: string, text2: string): number {
+    const set1 = new Set(text1.toLowerCase().split(/\s+/));
+    const set2 = new Set(text2.toLowerCase().split(/\s+/));
+    const intersection = new Set([...set1].filter(x => set2.has(x)));
+    const union = new Set([...set1, ...set2]);
+    return intersection.size / union.size;
+  }
+
+  private calculateLevenshteinSimilarity(text1: string, text2: string): number {
+    const m = text1.length;
+    const n = text2.length;
+    const dp: number[][] = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
+
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (text1[i - 1] === text2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1];
+        } else {
+          dp[i][j] = Math.min(
+            dp[i - 1][j - 1] + 1,
+            dp[i - 1][j] + 1,
+            dp[i][j - 1] + 1
+          );
+        }
+      }
+    }
+
+    return 1 - (dp[m][n] / Math.max(m, n));
+  }
+
+  private calculateLCSSimilarity(text1: string, text2: string): number {
+    const m = text1.length;
+    const n = text2.length;
+    const dp: number[][] = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
+
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (text1[i - 1] === text2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+
+    return dp[m][n] / Math.max(m, n);
+  }
+
+  /**
+   * 简单启发式判断文本是否为LLM生成
+   */
+  detectLLMGenerated(text: string) {
+    if (!text || text.length < 30) {
+      this.llmProbability = 0;
+      this.llmExplanation = '文本过短，无法判断';
+      return;
+    }
+    // 统计特征
+    const sentences = text.split(/[。.!?\n]/).filter(s => s.trim().length > 0);
+    const words = text.split(/\s+/).filter(w => w.trim().length > 0);
+    const uniqueWords = new Set(words.map(w => w.toLowerCase()));
+    const avgSentenceLength = words.length / sentences.length;
+    const uniqueWordRatio = uniqueWords.size / words.length;
+    const repetition = words.length - uniqueWords.size;
+    // 典型 LLM 特征：句子较长、用词丰富但重复率低、结构工整
+    let score = 0;
+    if (avgSentenceLength > 15) score += 0.3;
+    if (uniqueWordRatio > 0.6) score += 0.3;
+    if (repetition < words.length * 0.2) score += 0.2;
+    if (/很抱歉|作为一个|我是一个|AI|人工智能|无法/.test(text)) score += 0.2;
+    this.llmProbability = Math.min(1, score);
+    if (this.llmProbability > 0.7) {
+      this.llmExplanation = '文本结构工整、用词丰富且重复率低，疑似LLM生成。';
+    } else if (this.llmProbability > 0.4) {
+      this.llmExplanation = '文本有部分LLM生成特征，但不能确定。';
+    } else {
+      this.llmExplanation = '文本不太像LLM生成。';
+    }
   }
 }

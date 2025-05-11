@@ -76,7 +76,24 @@ export const translations: { [key: string]: { zh: string; en: string } } = {
   '检查文本': { zh: '检查文本', en: 'Check Text' },
   '已添加的文本': { zh: '已添加的文本', en: 'Added Texts' },
   '聚类': { zh: '聚类', en: 'Cluster' },
-  '未发现错误': { zh: '未发现错误', en: 'No errors found' }
+  '未发现错误': { zh: '未发现错误', en: 'No errors found' },
+  '高级分析': { zh: '高级分析', en: 'Advanced Analysis' },
+  '词形分析': { zh: '词形分析', en: 'Morphological Analysis' },
+  '词形还原': { zh: '词形还原', en: 'Lemmatization' },
+  '词干提取': { zh: '词干提取', en: 'Stemming' },
+  '词性标注': { zh: '词性标注', en: 'POS Tagging' },
+  '情感分析增强': { zh: '情感分析增强', en: 'Enhanced Sentiment Analysis' },
+  '情感强度': { zh: '情感强度', en: 'Sentiment Intensity' },
+  '积极词汇': { zh: '积极词汇', en: 'Positive Words' },
+  '消极词汇': { zh: '消极词汇', en: 'Negative Words' },
+  '语言检测增强': { zh: '语言检测增强', en: 'Enhanced Language Detection' },
+  '语言置信度': { zh: '语言置信度', en: 'Language Confidence' },
+  '语言变体': { zh: '语言变体', en: 'Language Variants' },
+  '相似度分析': { zh: '相似度分析', en: 'Similarity Analysis' },
+  '余弦相似度': { zh: '余弦相似度', en: 'Cosine Similarity' },
+  'Jaccard相似度': { zh: 'Jaccard相似度', en: 'Jaccard Similarity' },
+  '编辑距离相似度': { zh: '编辑距离相似度', en: 'Levenshtein Similarity' },
+  '最长公共子序列相似度': { zh: '最长公共子序列相似度', en: 'LCS Similarity' }
 };
 
 export const commonMistakes: { [key: string]: string[] } = {
