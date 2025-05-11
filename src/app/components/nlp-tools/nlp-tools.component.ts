@@ -11,6 +11,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 import nlp from 'compromise';
 import Sentiment from 'sentiment';
 import { franc } from 'franc';
@@ -50,7 +52,9 @@ interface TextCategory {
     MatProgressBarModule,
     MatTabsModule,
     MatDividerModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule,
+    MatSelectModule
   ],
   templateUrl: './nlp-tools.component.html',
   styleUrls: ['./nlp-tools.component.scss']
@@ -74,6 +78,7 @@ export class NlpToolsComponent {
   similarTexts: { text: string; similarity: number }[] = [];
   comparisonText: string = '';
   jsonOutput: string = '';
+  currentLanguage: 'zh' | 'en' = 'zh';
 
   private sentimentAnalyzer = new Sentiment();
   private readonly categoryKeywords = {
@@ -82,6 +87,46 @@ export class NlpToolsComponent {
     '体育': ['sports', 'game', 'team', 'player', 'competition', 'athlete', 'match', 'tournament', 'championship', 'coach'],
     '政治': ['politics', 'government', 'election', 'policy', 'democracy', 'vote', 'campaign', 'party', 'leader', 'policy'],
     '科学': ['science', 'research', 'experiment', 'discovery', 'study', 'theory', 'scientist', 'laboratory', 'analysis', 'method']
+  };
+
+  private readonly translations: { [key: string]: { zh: string; en: string } } = {
+    'NLP 文本分析工具': { zh: 'NLP 文本分析工具', en: 'NLP Text Analysis Tool' },
+    '输入文本': { zh: '输入文本', en: 'Input Text' },
+    '请输入要分析的文本...': { zh: '请输入要分析的文本...', en: 'Please enter text to analyze...' },
+    '分析文本': { zh: '分析文本', en: 'Analyze Text' },
+    '基础统计': { zh: '基础统计', en: 'Basic Statistics' },
+    '字符数': { zh: '字符数', en: 'Character Count' },
+    '词数': { zh: '词数', en: 'Word Count' },
+    '句子数': { zh: '句子数', en: 'Sentence Count' },
+    '检测到的语言': { zh: '检测到的语言', en: 'Detected Language' },
+    '情感分析': { zh: '情感分析', en: 'Sentiment Analysis' },
+    '情感倾向': { zh: '情感倾向', en: 'Sentiment' },
+    '情感得分': { zh: '情感得分', en: 'Sentiment Score' },
+    '实体识别': { zh: '实体识别', en: 'Entity Recognition' },
+    '词性分析': { zh: '词性分析', en: 'Part of Speech Analysis' },
+    '动词': { zh: '动词', en: 'Verbs' },
+    '形容词': { zh: '形容词', en: 'Adjectives' },
+    '名词': { zh: '名词', en: 'Nouns' },
+    '关键词': { zh: '关键词', en: 'Keywords' },
+    '文本分类': { zh: '文本分类', en: 'Text Classification' },
+    '文本相似度': { zh: '文本相似度', en: 'Text Similarity' },
+    '比较文本': { zh: '比较文本', en: 'Compare Text' },
+    '请输入要比较的文本...': { zh: '请输入要比较的文本...', en: 'Please enter text to compare...' },
+    '相似度': { zh: '相似度', en: 'Similarity' },
+    '文本摘要': { zh: '文本摘要', en: 'Text Summary' },
+    '句子列表': { zh: '句子列表', en: 'Sentence List' },
+    '分析结果 JSON': { zh: '分析结果 JSON', en: 'Analysis Results JSON' },
+    '复制到剪贴板': { zh: '复制到剪贴板', en: 'Copy to Clipboard' },
+    '人物': { zh: '人物', en: 'Person' },
+    '地点': { zh: '地点', en: 'Location' },
+    '组织': { zh: '组织', en: 'Organization' },
+    '非常积极': { zh: '非常积极', en: 'Very Positive' },
+    '积极': { zh: '积极', en: 'Positive' },
+    '中性': { zh: '中性', en: 'Neutral' },
+    '消极': { zh: '消极', en: 'Negative' },
+    '非常消极': { zh: '非常消极', en: 'Very Negative' },
+    '未知语言': { zh: '未知语言', en: 'Unknown Language' },
+    '选择语言': { zh: '选择语言', en: 'Select Language' }
   };
 
   constructor(private snackBar: MatSnackBar) {}
@@ -273,5 +318,9 @@ export class NlpToolsComponent {
         verticalPosition: 'bottom'
       });
     });
+  }
+
+  getTranslation(key: string): string {
+    return this.translations[key]?.[this.currentLanguage] || key;
   }
 }

@@ -1,42 +1,51 @@
 <div class="container">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>NLP 文本分析工具</mat-card-title>
+      <mat-card-title>{{getTranslation('NLP 文本分析工具')}}</mat-card-title>
+      <div class="language-selector">
+        <mat-form-field>
+          <mat-label>{{getTranslation('选择语言')}}</mat-label>
+          <mat-select [(ngModel)]="currentLanguage">
+            <mat-option value="zh">中文</mat-option>
+            <mat-option value="en">English</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </mat-card-header>
     <mat-card-content>
       <mat-form-field appearance="fill" class="full-width">
-        <mat-label>输入文本</mat-label>
-        <textarea matInput [(ngModel)]="inputText" rows="5" placeholder="请输入要分析的文本..."></textarea>
+        <mat-label>{{getTranslation('输入文本')}}</mat-label>
+        <textarea matInput [(ngModel)]="inputText" rows="5" [placeholder]="getTranslation('请输入要分析的文本...')" [title]="getTranslation('输入文本')"></textarea>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" (click)="analyzeText()">分析文本</button>
+      <button mat-raised-button color="primary" (click)="analyzeText()" [title]="getTranslation('分析文本')">{{getTranslation('分析文本')}}</button>
 
       <div class="results" *ngIf="wordCount > 0">
         <mat-tab-group>
-          <mat-tab label="基础统计">
+          <mat-tab [label]="getTranslation('基础统计')">
             <mat-list>
               <mat-list-item>
-                <span>字符数：{{characterCount}}</span>
+                <span>{{getTranslation('字符数')}}：{{characterCount}}</span>
               </mat-list-item>
               <mat-list-item>
-                <span>词数：{{wordCount}}</span>
+                <span>{{getTranslation('词数')}}：{{wordCount}}</span>
               </mat-list-item>
               <mat-list-item>
-                <span>句子数：{{sentences.length}}</span>
+                <span>{{getTranslation('句子数')}}：{{sentences.length}}</span>
               </mat-list-item>
               <mat-list-item>
-                <span>检测到的语言：{{detectedLanguage}}</span>
+                <span>{{getTranslation('检测到的语言')}}：{{detectedLanguage}}</span>
               </mat-list-item>
             </mat-list>
           </mat-tab>
 
-          <mat-tab label="情感分析">
+          <mat-tab [label]="getTranslation('情感分析')">
             <mat-list>
               <mat-list-item>
-                <span>情感倾向：{{sentiment}}</span>
+                <span>{{getTranslation('情感倾向')}}：{{getTranslation(sentiment)}}</span>
               </mat-list-item>
               <mat-list-item>
-                <span>情感得分：</span>
+                <span>{{getTranslation('情感得分')}}：</span>
                 <mat-progress-bar
                   [value]="(sentimentScore + 5) * 10"
                   [color]="sentimentScore > 0 ? 'primary' : 'warn'"
@@ -46,20 +55,20 @@
             </mat-list>
           </mat-tab>
 
-          <mat-tab label="实体识别">
+          <mat-tab [label]="getTranslation('实体识别')">
             <div class="entities-container">
               <div *ngFor="let entity of entities" class="entity-item">
                 <mat-chip color="accent" selected>
-                  {{entity.type}}: {{entity.text}}
+                  {{getTranslation(entity.type)}}: {{entity.text}}
                 </mat-chip>
               </div>
             </div>
           </mat-tab>
 
-          <mat-tab label="词性分析">
+          <mat-tab [label]="getTranslation('词性分析')">
             <div class="pos-analysis">
               <div class="pos-section">
-                <h4>动词</h4>
+                <h4>{{getTranslation('动词')}}</h4>
                 <div class="chips-container">
                   <mat-chip *ngFor="let verb of verbs" color="primary">
                     {{verb}}
@@ -68,7 +77,7 @@
               </div>
 
               <div class="pos-section">
-                <h4>形容词</h4>
+                <h4>{{getTranslation('形容词')}}</h4>
                 <div class="chips-container">
                   <mat-chip *ngFor="let adj of adjectives" color="accent">
                     {{adj}}
@@ -77,7 +86,7 @@
               </div>
 
               <div class="pos-section">
-                <h4>名词</h4>
+                <h4>{{getTranslation('名词')}}</h4>
                 <div class="chips-container">
                   <mat-chip *ngFor="let noun of nouns" color="warn">
                     {{noun}}
@@ -87,7 +96,7 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="关键词">
+          <mat-tab [label]="getTranslation('关键词')">
             <div class="keywords-container">
               <mat-chip *ngFor="let keyword of keywords" color="primary" selected>
                 {{keyword.word}} ({{keyword.score.toFixed(2)}})
@@ -95,7 +104,7 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="文本分类">
+          <mat-tab [label]="getTranslation('文本分类')">
             <div class="categories-container">
               <mat-list>
                 <mat-list-item *ngFor="let category of textCategories">
@@ -110,19 +119,19 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="文本相似度">
+          <mat-tab [label]="getTranslation('文本相似度')">
             <div class="similarity-container">
               <mat-form-field appearance="fill" class="full-width">
-                <mat-label>比较文本</mat-label>
-                <textarea matInput [(ngModel)]="comparisonText" rows="3" placeholder="请输入要比较的文本..."></textarea>
+                <mat-label>{{getTranslation('比较文本')}}</mat-label>
+                <textarea matInput [(ngModel)]="comparisonText" rows="3" [placeholder]="getTranslation('请输入要比较的文本...')" [title]="getTranslation('比较文本')"></textarea>
               </mat-form-field>
 
-              <button mat-raised-button color="primary" (click)="compareTexts()">比较文本</button>
+              <button mat-raised-button color="primary" (click)="compareTexts()" [title]="getTranslation('比较文本')">{{getTranslation('比较文本')}}</button>
 
               <div *ngIf="similarTexts.length > 0" class="similarity-results">
                 <mat-list>
                   <mat-list-item *ngFor="let result of similarTexts">
-                    <span>相似度：{{(result.similarity * 100).toFixed(1)}}%</span>
+                    <span>{{getTranslation('相似度')}}：{{(result.similarity * 100).toFixed(1)}}%</span>
                     <mat-progress-bar
                       [value]="result.similarity * 100"
                       color="primary"
@@ -134,13 +143,13 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="文本摘要">
+          <mat-tab [label]="getTranslation('文本摘要')">
             <div class="summary">
               {{summary}}
             </div>
           </mat-tab>
 
-          <mat-tab label="句子列表">
+          <mat-tab [label]="getTranslation('句子列表')">
             <mat-list>
               <mat-list-item *ngFor="let sentence of sentences">
                 {{sentence}}
@@ -149,10 +158,10 @@
           </mat-tab>
         </mat-tab-group>
 
-        <div class="json-output-container" *ngIf="wordCount > 0">
+        <div class="json-output-container">
           <div class="json-header">
-            <h3>分析结果 JSON</h3>
-            <button mat-icon-button (click)="copyToClipboard()" matTooltip="复制到剪贴板">
+            <h3>{{getTranslation('分析结果 JSON')}}</h3>
+            <button mat-icon-button (click)="copyToClipboard()" [matTooltip]="getTranslation('复制到剪贴板')">
               <mat-icon>content_copy</mat-icon>
             </button>
           </div>
