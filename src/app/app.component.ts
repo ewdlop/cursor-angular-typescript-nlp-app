@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { TextAnalysisComponent } from './components/text-analysis/text-analysis.component';
+import { CommonModule } from '@angular/common';
+import { NlpToolsComponent } from './components/nlp-tools/nlp-tools.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [TextAnalysisComponent],
+  imports: [CommonModule, NlpToolsComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'nlp-app';
+}

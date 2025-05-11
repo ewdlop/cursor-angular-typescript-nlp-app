@@ -1,0 +1,112 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>NLP 文本分析工具</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>输入文本</mat-label>
+        <textarea matInput [(ngModel)]="inputText" rows="5" placeholder="请输入要分析的文本..."></textarea>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="analyzeText()">分析文本</button>
+
+      <div class="results" *ngIf="wordCount > 0">
+        <mat-tab-group>
+          <mat-tab label="基础统计">
+            <mat-list>
+              <mat-list-item>
+                <span>字符数：{{characterCount}}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <span>词数：{{wordCount}}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <span>句子数：{{sentences.length}}</span>
+              </mat-list-item>
+            </mat-list>
+          </mat-tab>
+
+          <mat-tab label="情感分析">
+            <mat-list>
+              <mat-list-item>
+                <span>情感倾向：{{sentiment}}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <span>情感得分：</span>
+                <mat-progress-bar
+                  [value]="(sentimentScore + 5) * 10"
+                  [color]="sentimentScore > 0 ? 'primary' : 'warn'"
+                  class="sentiment-bar">
+                </mat-progress-bar>
+              </mat-list-item>
+            </mat-list>
+          </mat-tab>
+
+          <mat-tab label="实体识别">
+            <div class="entities-container">
+              <div *ngFor="let entity of entities" class="entity-item">
+                <mat-chip color="accent" selected>
+                  {{entity.type}}: {{entity.text}}
+                </mat-chip>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="词性分析">
+            <div class="pos-analysis">
+              <div class="pos-section">
+                <h4>动词</h4>
+                <div class="chips-container">
+                  <mat-chip *ngFor="let verb of verbs" color="primary">
+                    {{verb}}
+                  </mat-chip>
+                </div>
+              </div>
+
+              <div class="pos-section">
+                <h4>形容词</h4>
+                <div class="chips-container">
+                  <mat-chip *ngFor="let adj of adjectives" color="accent">
+                    {{adj}}
+                  </mat-chip>
+                </div>
+              </div>
+
+              <div class="pos-section">
+                <h4>名词</h4>
+                <div class="chips-container">
+                  <mat-chip *ngFor="let noun of nouns" color="warn">
+                    {{noun}}
+                  </mat-chip>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="主题">
+            <div class="topics-container">
+              <mat-chip *ngFor="let topic of topics" color="primary" selected>
+                {{topic}}
+              </mat-chip>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="文本摘要">
+            <div class="summary">
+              {{summary}}
+            </div>
+          </mat-tab>
+
+          <mat-tab label="句子列表">
+            <mat-list>
+              <mat-list-item *ngFor="let sentence of sentences">
+                {{sentence}}
+              </mat-list-item>
+            </mat-list>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

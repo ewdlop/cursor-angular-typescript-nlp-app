@@ -1,0 +1,84 @@
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+button {
+  margin-bottom: 20px;
+}
+
+.results {
+  margin-top: 20px;
+}
+
+mat-card {
+  margin-bottom: 20px;
+}
+
+mat-list-item {
+  margin-bottom: 10px;
+}
+
+.sentiment-bar {
+  margin-left: 10px;
+  width: 200px;
+}
+
+.entities-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
+}
+
+.entity-item {
+  margin: 4px;
+}
+
+.pos-analysis {
+  padding: 16px;
+
+  .pos-section {
+    margin-bottom: 20px;
+
+    h4 {
+      margin-bottom: 8px;
+      color: #666;
+    }
+  }
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.topics-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
+}
+
+.summary {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 10px;
+  line-height: 1.5;
+}
+
+mat-tab-group {
+  margin-top: 20px;
+}
+
+::ng-deep .mat-mdc-tab-body-wrapper {
+  padding: 16px;
+}
