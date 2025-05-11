@@ -1,0 +1,42 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>文本分析工具</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>输入要分析的文本</mat-label>
+        <textarea matInput
+                  [(ngModel)]="inputText"
+                  rows="6"
+                  placeholder="在此输入文本..."></textarea>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="analyzeText()">
+        分析文本
+      </button>
+
+      <div class="results" *ngIf="wordCount > 0">
+        <h3>分析结果：</h3>
+        <mat-list>
+          <mat-list-item>
+            <span>单词数：{{ wordCount }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span>字符数：{{ characterCount }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span>句子数：{{ sentenceCount }}</span>
+          </mat-list-item>
+        </mat-list>
+
+        <h3>最常见的单词：</h3>
+        <mat-list>
+          <mat-list-item *ngFor="let item of commonWords">
+            <span>{{ item.word }} (出现 {{ item.count }} 次)</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

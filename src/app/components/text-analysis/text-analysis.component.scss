@@ -1,0 +1,31 @@
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+button {
+  margin-bottom: 20px;
+}
+
+.results {
+  margin-top: 20px;
+  
+  h3 {
+    margin: 20px 0 10px;
+    color: #333;
+  }
+}
+
+mat-card {
+  margin-bottom: 20px;
+}
+
+mat-list-item {
+  margin: 5px 0;
+}

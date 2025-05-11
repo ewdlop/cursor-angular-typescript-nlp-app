@@ -1,59 +1,96 @@
-# NlpApp
+# NLP 文本分析应用 / NLP Text Analysis Application / NLP 文本分析應用
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.11.
+[English](#english) | [简体中文](#simplified-chinese) | [繁體中文](#traditional-chinese)
 
-## Development server
+## English
 
-To start a local development server, run:
+### Overview
+This is a text analysis application built with Angular and Material UI. It provides various NLP (Natural Language Processing) features to analyze text content.
 
+### Features
+- Word count analysis
+- Character count analysis
+- Sentence count analysis
+- Most common words detection
+- Modern Material UI interface
+
+### Technologies Used
+- Angular 17+
+- TypeScript
+- Angular Material
+- SCSS
+
+### Getting Started
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Start the development server:
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+3. Open your browser and navigate to `http://localhost:4200`
 
-## Code scaffolding
+## Simplified Chinese
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 概述
+这是一个使用 Angular 和 Material UI 构建的文本分析应用。它提供各种自然语言处理（NLP）功能来分析文本内容。
 
+### 功能特点
+- 单词数量统计
+- 字符数量统计
+- 句子数量统计
+- 最常见单词检测
+- 现代化 Material UI 界面
+
+### 使用的技术
+- Angular 17+
+- TypeScript
+- Angular Material
+- SCSS
+
+### 开始使用
+1. 安装依赖：
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+2. 启动开发服务器：
 ```bash
-ng generate --help
+ng serve
 ```
 
-## Building
+3. 打开浏览器并访问 `http://localhost:4200`
 
-To build the project run:
+## Traditional Chinese
 
+### 概述
+這是一個使用 Angular 和 Material UI 構建的文本分析應用。它提供各種自然語言處理（NLP）功能來分析文本內容。
+
+### 功能特點
+- 單詞數量統計
+- 字符數量統計
+- 句子數量統計
+- 最常見單詞檢測
+- 現代化 Material UI 界面
+
+### 使用的技術
+- Angular 17+
+- TypeScript
+- Angular Material
+- SCSS
+
+### 開始使用
+1. 安裝依賴：
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
+2. 啟動開發服務器：
 ```bash
-ng test
+ng serve
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+3. 打開瀏覽器並訪問 `http://localhost:4200`
