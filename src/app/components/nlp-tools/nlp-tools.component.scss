@@ -60,11 +60,33 @@ mat-list-item {
   gap: 8px;
 }
 
-.topics-container {
+.keywords-container {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   padding: 16px;
+}
+
+.categories-container {
+  padding: 16px;
+
+  .category-bar {
+    margin-left: 10px;
+    width: 200px;
+  }
+}
+
+.similarity-container {
+  padding: 16px;
+
+  .similarity-results {
+    margin-top: 20px;
+  }
+
+  .similarity-bar {
+    margin-left: 10px;
+    width: 200px;
+  }
 }
 
 .summary {
@@ -81,4 +103,42 @@ mat-tab-group {
 
 ::ng-deep .mat-mdc-tab-body-wrapper {
   padding: 16px;
+}
+
+.json-output-container {
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin: 20px 0;
+  border: 1px solid #e0e0e0;
+
+  .json-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+
+    h3 {
+      margin: 0;
+      color: #333;
+      font-size: 18px;
+    }
+  }
+
+  .json-content {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+  }
 }

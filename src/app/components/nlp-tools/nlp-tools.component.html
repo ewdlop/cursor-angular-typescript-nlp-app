@@ -24,6 +24,9 @@
               <mat-list-item>
                 <span>句子数：{{sentences.length}}</span>
               </mat-list-item>
+              <mat-list-item>
+                <span>检测到的语言：{{detectedLanguage}}</span>
+              </mat-list-item>
             </mat-list>
           </mat-tab>
 
@@ -84,11 +87,50 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="主题">
-            <div class="topics-container">
-              <mat-chip *ngFor="let topic of topics" color="primary" selected>
-                {{topic}}
+          <mat-tab label="关键词">
+            <div class="keywords-container">
+              <mat-chip *ngFor="let keyword of keywords" color="primary" selected>
+                {{keyword.word}} ({{keyword.score.toFixed(2)}})
               </mat-chip>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="文本分类">
+            <div class="categories-container">
+              <mat-list>
+                <mat-list-item *ngFor="let category of textCategories">
+                  <span>{{category.category}}: {{(category.score * 100).toFixed(1)}}%</span>
+                  <mat-progress-bar
+                    [value]="category.score * 100"
+                    color="primary"
+                    class="category-bar">
+                  </mat-progress-bar>
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="文本相似度">
+            <div class="similarity-container">
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>比较文本</mat-label>
+                <textarea matInput [(ngModel)]="comparisonText" rows="3" placeholder="请输入要比较的文本..."></textarea>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" (click)="compareTexts()">比较文本</button>
+
+              <div *ngIf="similarTexts.length > 0" class="similarity-results">
+                <mat-list>
+                  <mat-list-item *ngFor="let result of similarTexts">
+                    <span>相似度：{{(result.similarity * 100).toFixed(1)}}%</span>
+                    <mat-progress-bar
+                      [value]="result.similarity * 100"
+                      color="primary"
+                      class="similarity-bar">
+                    </mat-progress-bar>
+                  </mat-list-item>
+                </mat-list>
+              </div>
             </div>
           </mat-tab>
 
@@ -106,6 +148,16 @@
             </mat-list>
           </mat-tab>
         </mat-tab-group>
+
+        <div class="json-output-container" *ngIf="wordCount > 0">
+          <div class="json-header">
+            <h3>分析结果 JSON</h3>
+            <button mat-icon-button (click)="copyToClipboard()" matTooltip="复制到剪贴板">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+          </div>
+          <pre class="json-content">{{ jsonOutput }}</pre>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
