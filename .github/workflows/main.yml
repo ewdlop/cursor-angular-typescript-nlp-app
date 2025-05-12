@@ -1,23 +1,34 @@
-name: Build and Deploy
+name: Deploy Angular to GitHub Pages
+
 on:
   push:
     branches:
-      - master
-jobs:
-  build:
+      - main  # Or your default branch
 
+permissions:
+  contents: write  # Needed to push to gh-pages
+
+jobs:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: All things angular
-      uses: AhsanAyaz/angular-deploy-gh-pages-actions@@v1.4.0 ## replace by latest version without it you will see Expected format {org}/{repo}[/path]@ref. Actual 'AhsanAyaz/angular-deploy-gh-pages-actions',Input string was not in a correct format.
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }} # see the Configuration section for how you can create secrets
-        build_configuration: staging # The build environment for the app. please look configurations in your angular.json
-        base_href: /my-project/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
-        deploy_branch: gh-pages # The branch the action should deploy to.
-        angular_dist_build_folder: dist/my-project # The folder where your project is supposed to be after running ng build by the action.
+    - name: Checkout 🛎️
+      uses: actions/checkout@v3
 
-permissions:
-  contents: write # Allow write permission to GITHUB_TOKEN to commit to deploy branch.
+    - name: Setup Node.js 💻
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18  # Or your preferred version
+
+    - name: Install Dependencies 📦
+      run: npm ci
+
+    - name: Build Angular App 🛠️
+      run: npm run build --configuration production
+
+    - name: Deploy to GitHub Pages 🚀
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: dist/nlp-app
