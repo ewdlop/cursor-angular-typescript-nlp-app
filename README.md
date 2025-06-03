@@ -214,3 +214,10 @@ ng serve
 ```
 
 3. 打開瀏覽器並訪問 `http://localhost:4200`
+
+## GitHub Pages deploy
+
+```bash
+ng build --configuration production --base-href "https://<your-username>.github.io/<your-repo-name>/"
+npx angular-cli-ghpages --dir=dist/nlp-app
+```
